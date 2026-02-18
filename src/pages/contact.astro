@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contact | Cybersecurity Portfolio" description="Get in touch — contact for security consulting or collaboration.">
+  <div class="container">
+    <section class="contact-card card">
+      <h2>Get in touch</h2>
+      <ul class="contact-list">
+        <li>
+          <strong>Email</strong>
+          <a href="mailto:mflisarsky@gmail.com">mflisarsky@gmail.com</a>
+        </li>
+        <li>
+          <strong>LinkedIn</strong>
+          <a href="https://www.linkedin.com/in/markflisarsky/" target="_blank" rel="noopener noreferrer">linkedin.com/in/markflisarsky</a>
+        </li>
+        <li>
+          <strong>GitHub</strong>
+          <a href="https://github.com/Mflisarsky" target="_blank" rel="noopener noreferrer">github.com/Mflisarsky</a>
+        </li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact-card h2 {
+    margin-bottom: 1rem;
+  }
+  .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+  }
+  .contact-list li {
+    margin-bottom: 0.75rem;
+  }
+  .contact-list strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+  }
+  .contact-note {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+</style>

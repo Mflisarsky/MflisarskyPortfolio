@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout title="Mark Flisarsky | Cybersecurity Portfolio" description="Cybersecurity portfolio — digital forensics and investigative analysis project work.">
+  <div class="container">
+    <section class="hero">
+      <h1 class="hero-title">Mark Flisarsky</h1>
+      <p class="hero-subtitle">Cybersecurity Portfolio</p>
+    </section>
+
+    <section class="recent">
+      <h2>Recent Projects</h2>
+      <div class="project-grid">
+        {projects.map((entry) => (
+          <a href={`/projects/${entry.id}`} class="card project-card">
+            <h3>{entry.data.title}</h3>
+            <p class="project-summary">{entry.data.summary}</p>
+            <div class="project-meta">
+              <time datetime={entry.data.date.toISOString()}>
+                {entry.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })}
+              </time>
+              <span class="tags-inline">
+                {entry.data.tags.slice(0, 3).map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+      <a href="/projects" class="btn">View all projects</a>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 3rem 0 4rem;
+  }
+  .hero-title {
+    margin-bottom: 0.5rem;
+  }
+  .hero-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    max-width: 36ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .recent h2 {
+    margin-bottom: 1.5rem;
+  }
+  .project-grid {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  @media (min-width: 640px) {
+    .project-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 900px) {
+    .project-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .project-card {
+    display: block;
+    color: inherit;
+  }
+  .project-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  .project-summary {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .project-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .tags-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+</style>

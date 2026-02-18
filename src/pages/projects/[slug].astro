@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, date, tags, tools, summary, repoUrl, demoUrl } = entry.data;
+---
+
+<BaseLayout title={`${title} | Projects`} description={summary}>
+  <article class="container">
+    <header class="project-header">
+      <a href="/projects" class="back-link">← Projects</a>
+      <h1>{title}</h1>
+      <div class="meta-row">
+        <time datetime={date.toISOString()}>
+          {date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+        </time>
+        <div class="tags">
+          {tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      </div>
+      <div class="tools">
+        <strong>Tools:</strong> {tools.join(', ')}
+      </div>
+      <div class="links">
+        {repoUrl && (
+          <a href={repoUrl} class="btn" target="_blank" rel="noopener noreferrer">Source / Repository</a>
+        )}
+        {demoUrl && (
+          <a href={demoUrl} class="btn btn-primary" target="_blank" rel="noopener noreferrer">Demo</a>
+        )}
+      </div>
+    </header>
+
+    <div class="prose content-body">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-header {
+    margin-bottom: 2rem;
+  }
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+  .back-link:hover {
+    color: var(--accent);
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.75rem 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .tools {
+    margin: 0.75rem 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+  .links {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .content-body {
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+</style>

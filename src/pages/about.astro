@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const skills = ['Autopsy', 'Digital forensics basics', 'Windows artifacts', 'Report writing'];
+const completed = ['Applied Networks and Security', 'Data Structures I & II', 'Computer Systems I'];
+const inProgress = ['Fundamentals of Information Assurance', 'Intro to Local Area Networks'];
+---
+
+<BaseLayout title="About | Mark Flisarsky" description="Cybersecurity student at DePaul University. CompTIA A+. Seeking an entry-level IT or cybersecurity internship.">
+  <div class="container about-page">
+    <h1>About</h1>
+
+    <section class="bio-section card">
+      <p class="bio-text">
+        I am a cybersecurity student at DePaul University with CompTIA A+ certification and a strong academic record. Experienced in troubleshooting, risk awareness, monitoring, documentation, and customer-facing support. Seeking an entry-level IT or cybersecurity internship to apply technical fundamentals and continue skill development.
+      </p>
+    </section>
+
+    <section class="coursework-section">
+      <h2>Relevant coursework</h2>
+      <div class="coursework-grid">
+        <div class="card coursework-card">
+          <h3>Completed</h3>
+          <ul class="course-list">
+            {completed.map((course) => (
+              <li>{course}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="card coursework-card">
+          <h3>In progress</h3>
+          <ul class="course-list">
+            {inProgress.map((course) => (
+              <li>{course}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="skills-section">
+      <h2>Skills</h2>
+      <div class="card skills-card">
+        <ul class="skill-list">
+          {skills.map((skill) => (
+            <li>{skill}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-page {
+    max-width: 700px;
+  }
+  .bio-section {
+    margin-bottom: 2rem;
+  }
+  .bio-text {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 1rem;
+  }
+  .coursework-section {
+    margin-bottom: 2rem;
+  }
+  .coursework-section h2,
+  .skills-section h2 {
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+    color: var(--text-primary);
+  }
+  .coursework-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 540px) {
+    .coursework-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .coursework-card h3 {
+    margin: 0 0 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .course-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  .course-list li {
+    margin-bottom: 0.35rem;
+  }
+  .skills-section {
+    margin-bottom: 2rem;
+  }
+  .skills-card {
+    padding: 1.5rem;
+  }
+  .skill-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  .skill-list li {
+    margin-bottom: 0.35rem;
+  }
+</style>
