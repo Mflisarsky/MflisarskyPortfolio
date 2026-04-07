@@ -24,6 +24,7 @@ const { title, description = 'Cybersecurity portfolio — projects, research, an
     <title>{title}</title>
   </head>
   <body class="layout-body">
+    <canvas id="starfield" aria-hidden="true"></canvas>
     <header>
       <Nav />
     </header>
@@ -37,6 +38,7 @@ const { title, description = 'Cybersecurity portfolio — projects, research, an
     </footer>
     <script>
       import '../scripts/reveal.js';
+      import '../scripts/starfield.js';
     </script>
   </body>
 </html>
@@ -46,6 +48,15 @@ const { title, description = 'Cybersecurity portfolio — projects, research, an
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+  }
+  #starfield {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    display: block;
+    background: var(--bg-primary);
   }
   main {
     flex: 1;
