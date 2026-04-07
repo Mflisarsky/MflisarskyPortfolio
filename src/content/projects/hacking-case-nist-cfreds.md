@@ -9,19 +9,19 @@ repoUrl: "https://cfreds.nist.gov/all/NIST/HackingCase"
 
 ## Overview
 
-This project was a digital forensics investigation using **Autopsy** on the NIST CFReDS forensic image **"Hacking Case"** (<a href="https://cfreds.nist.gov/all/NIST/HackingCase" target="_blank" rel="noopener noreferrer">NIST Hacking Case</a>). The case description indicated the device was involved in wireless hacking activity, including a homemade 802.11b antenna. The goal was to find evidence of wireless tools, network scanners, suspicious files, and browser activity related to hacking — and to build a clear narrative of software presence, usage, and malicious intent.
+This project was a **digital forensics investigation** using **Autopsy** (a free, open-source forensic platform) to analyze a **"Hacking Case"** forensic image from NIST CFReDS (<a href="https://cfreds.nist.gov/all/NIST/HackingCase" target="_blank" rel="noopener noreferrer">NIST Hacking Case</a>). CFReDS provides real-world forensic images for training; this one is a copy of a laptop that was found with a wireless card and a homemade 802.11b antenna, suggesting possible wireless hacking or wardriving. The goal was to find out **who** used the device, **what** tools were on it, **whether** those tools were actually used, and **why** — and to tie that into a clear narrative a court or employer could follow.
 
 ![Case description — Dell notebook, wireless card, and 802.11b antenna](/images/hacking-case/case-intro.png)
 
 ## Approach
 
-I started by reading the case description to form hypotheses and then systematically examined OS accounts, user folders, desktop shortcuts, recent files, and web history to link a suspect to tools and intent.
+I read the case description first to form hypotheses, then worked through the evidence in order: identify the main user account, see what was on their desktop and in their folders, check what had been used recently, and finally review web history to establish intent. That way each step built on the last and supported a single story.
 
 ## Findings
 
 ### Suspect identification
 
-Under **OS Accounts**, a non-default user **"mr. evil"** was the only custom account, indicating he was the primary user and main suspect for the potential cybercrimes involving the device.
+I first looked at **OS Accounts** to see who had used the computer. Besides the default Windows accounts (e.g. Administrator, Guest), there was one custom user: **"mr. evil"**. That made him the only real person we could tie activity to, so he became the main suspect for anything the device was used for.
 
 ![Documents and Settings — mr.evil folder](/images/hacking-case/documents-settings-mr-evil.png)
 
@@ -29,39 +29,37 @@ Under **OS Accounts**, a non-default user **"mr. evil"** was the only custom acc
 
 ### Evidence on the Desktop
 
-Inside **Documents and Settings → mr.evil**, the **Desktop** contained a **"tools"** folder with multiple `.lnk` shortcuts to hacking-related software:
+Next I looked at **mr. evil’s** files. On his **Desktop** he had a **"tools"** folder full of shortcuts (`.lnk` files — Windows links to programs). Those shortcuts pointed to:
 
 ![Desktop and Tools folder structure](/images/hacking-case/desktop-tools-tree.png)
 
 ![Tools folder — .lnk shortcuts (Cain, Ethereal, Network Stumbler, etc.)](/images/hacking-case/tools-folder-lnks.png)
 
-- **Cain v2.5** — password cracking
-- **Ethereal (Wireshark)** — packet sniffing and network traffic capture
-- **Network Stumbler** — discover and analyze nearby wireless networks (strong indicator of wardriving)
+- **Cain v2.5** — a password-cracking and network-sniffing tool  
+- **Ethereal (now Wireshark)** — captures and analyzes network traffic  
+- **Network Stumbler** — finds and lists nearby wireless networks (often used for *wardriving*: driving around to map or access Wi‑Fi)
 
-This showed the suspect had access to and had saved links to these tools, but did not yet prove malicious use.
+So the suspect had these tools available and had chosen to keep shortcuts to them. That showed **what was on the machine**, but not yet that he had **used** them or had **bad intentions** — so I checked recent activity and browser history next.
 
 ### Proof of use
 
-I checked **Recent** activity and found recent use of:
+Windows keeps a **Recent** folder of recently opened files and shortcuts. I checked mr. evil’s Recent folder to see whether those tools had actually been launched. I found recent use of:
 
 ![Recent folder contents — Anonymizer, GhostWare, keys.lnk, etc.](/images/hacking-case/recent-folder-files.png)
 
-- **Anonymizer.lnk** — used to hide identity online
-- **Ghostware.lnk** — used to remotely monitor devices
-- **keys.lnk** — additional suspicious shortcut
+- **Anonymizer** — software used to hide your identity online  
+- **Ghostware** — used to remotely monitor or control other devices  
+- **keys.lnk** — another shortcut that suggested further suspicious activity  
 
-This established that someone had actively used these programs on the device.
+So we could show not only that these programs were **on** the machine, but that someone had **recently used** them — which pointed to mr. evil, the only active user.
 
 ### Evidence of intent
 
-To support malicious intent, I reviewed **Web History**. Findings included:
+Having tools and using them still isn’t enough to prove **intent** — they could theoretically be used for learning or authorized testing. So I reviewed **Web History** to see what the user was looking up and visiting. That gave clear evidence of intent:
 
-- Visits to **"elitehackers"** — a hacking community/forum, supporting the conclusion that the user was engaged in hacking culture
-- Access to multiple files from that site
-- Evidence of **downloading Network Stumbler**, corroborating the desktop shortcut
-- A **news article** showing the device was used for both hacking and personal use
-- **Direct evidence of interest in wardriving**, tying the homemade 802.11b antenna and Network Stumbler to likely wardriving activity
+- **elitehackers.com** — a hacking forum/community; he visited the site and accessed files there, showing he was involved in that world.
+- **netstumbler.com/downloads** — he had downloaded Network Stumbler, which matched the shortcut we found on his desktop.
+- **wardriving.com** and **whatismyip.com** — direct interest in wardriving and checking his IP, which fit with the homemade antenna and the kind of activity the case suggested.
 
 ![Visit Details — elitehackers.com](/images/hacking-case/visit-elitehackers.png)
 
@@ -71,13 +69,13 @@ To support malicious intent, I reviewed **Web History**. Findings included:
 
 ## Conclusion
 
-The investigation produced evidence in three areas:
+The investigation produced evidence in three areas that together tell a clear story:
 
-1. **Software existence** — hacking and anonymity tools present (Cain, Ethereal/Wireshark, Network Stumbler, Anonymizer, Ghostware).
-2. **Usage** — recent file and shortcut activity showing these tools were used on the device.
-3. **Malicious intent** — browser history (elitehackers, wardriving-related content) supporting a narrative of intentional misuse.
+1. **What was on the device** — Hacking and anonymity tools were present (Cain, Ethereal/Wireshark, Network Stumbler, Anonymizer, Ghostware), with shortcuts organized on the desktop.
+2. **Whether they were used** — The Recent folder showed that these and other suspicious programs had been opened recently, and mr. evil was the only non-default user, so the activity could be tied to him.
+3. **Why it mattered** — Browser history showed visits to hacking forums, wardriving sites, and a Network Stumbler download, which supported a narrative of intentional misuse (e.g. wardriving or unauthorized access) rather than accidental or innocent use.
 
-Together, this painted a clear picture of how the device was used and supported a cohesive forensic narrative for the case.
+In the end, a reader (or a court) could follow the same path: who used the laptop, what tools were there, that they were used, and that the user’s behavior indicated malicious intent — which is what this kind of forensic report is meant to show.
 
 ---
 

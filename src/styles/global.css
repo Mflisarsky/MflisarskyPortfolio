@@ -47,6 +47,27 @@ body {
   background-size: 24px 24px;
 }
 
+/* Subtle motion layer (disabled for reduced motion) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(800px 500px at 20% 10%, rgba(88, 166, 255, 0.08), transparent 60%),
+    radial-gradient(700px 500px at 80% 20%, rgba(63, 185, 80, 0.06), transparent 60%),
+    radial-gradient(900px 600px at 50% 90%, rgba(56, 139, 253, 0.06), transparent 55%);
+  opacity: 0.8;
+  transform: translate3d(0, 0, 0);
+  animation: ambientShift 14s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes ambientShift {
+  0% { transform: translate3d(-1.5%, -0.5%, 0); opacity: 0.65; }
+  100% { transform: translate3d(1.5%, 0.5%, 0); opacity: 0.85; }
+}
+
 a {
   color: var(--accent);
   text-decoration: none;
@@ -82,13 +103,18 @@ p:last-child {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
 }
 
 .card:hover {
   background: var(--bg-card-hover);
   border-color: var(--text-muted);
   box-shadow: var(--shadow);
+  transform: translateY(-2px);
 }
 
 /* Buttons / links as buttons */
@@ -99,7 +125,7 @@ p:last-child {
   padding: 0.5rem 1rem;
   border-radius: var(--radius);
   font-weight: 500;
-  transition: background var(--transition), color var(--transition);
+  transition: background var(--transition), color var(--transition), transform var(--transition);
   border: 1px solid var(--border);
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -110,6 +136,7 @@ p:last-child {
   background: var(--bg-card);
   border-color: var(--accent);
   color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .btn-primary {
@@ -145,6 +172,12 @@ p:last-child {
   height: auto;
   border-radius: var(--radius);
   border: 1px solid var(--border);
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.prose :global(img:hover) {
+  transform: translateY(-1px);
+  border-color: var(--text-muted);
 }
 
 .prose :global(pre),
@@ -189,4 +222,31 @@ p:last-child {
 @media (min-width: 768px) {
   .container { padding: 0 2rem; }
   h1 { font-size: 2.5rem; }
+}
+
+/* Scroll reveal */
+.reveal {
+  --reveal-delay: 0ms;
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(0.2px);
+  transition:
+    opacity 600ms ease,
+    transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 600ms ease;
+  transition-delay: var(--reveal-delay);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body::before { animation: none; }
+  .card:hover, .btn:hover, .prose :global(img:hover) { transform: none; }
+  .reveal { opacity: 1; transform: none; filter: none; transition: none; }
 }

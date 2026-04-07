@@ -68,6 +68,21 @@ const navLinks = [
     border-radius: var(--radius);
     color: var(--text-secondary);
     font-weight: 500;
+    position: relative;
+    transition: color var(--transition), background var(--transition);
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.35rem;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transform: scaleX(0.6);
+    transition: opacity var(--transition), transform var(--transition);
   }
 
   .nav-link:hover,
@@ -78,6 +93,12 @@ const navLinks = [
 
   .nav-link.active {
     color: var(--accent);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    opacity: 0.9;
+    transform: scaleX(1);
   }
 
   @media (max-width: 640px) {
