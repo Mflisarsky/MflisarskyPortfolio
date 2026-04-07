@@ -22,18 +22,38 @@
   ];
 
   /** @type {{x:number,y:number,r:number,vy:number,a:number}[]} */
-  let stars = [];
+  let stars = (window.__starfieldStars && Array.isArray(window.__starfieldStars))
+    ? window.__starfieldStars
+    : [];
+
+  // Persist stars across page transitions/navigation
+  window.__starfieldStars = stars;
+  window.__starfieldRunning = window.__starfieldRunning ?? false;
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
-    w = Math.max(1, Math.floor(rect.width));
-    h = Math.max(1, Math.floor(rect.height));
+    const nextW = Math.max(1, Math.floor(rect.width));
+    const nextH = Math.max(1, Math.floor(rect.height));
+
+    const prevW = w || nextW;
+    const prevH = h || nextH;
+
+    w = nextW;
+    h = nextH;
     canvas.width = Math.floor(w * DPR);
     canvas.height = Math.floor(h * DPR);
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 
-    // Re-seed stars on resize so distribution matches new size
-    seed();
+    // Keep stars consistent on resize: scale existing positions, don't reseed.
+    if (stars.length) {
+      const sx = w / prevW;
+      const sy = h / prevH;
+      for (const s of stars) {
+        s.x *= sx;
+        s.y *= sy;
+      }
+    }
+
     draw(); // draw once immediately
   }
 
@@ -42,7 +62,8 @@
   }
 
   function seed() {
-    stars = [];
+    // Only seed once per session; keep in window.__starfieldStars so stars persist across view transitions.
+    stars.length = 0;
     for (const layer of STAR_LAYERS) {
       for (let i = 0; i < layer.count; i++) {
         stars.push({
@@ -115,7 +136,14 @@
     else start();
   });
 
+  // Avoid multiple loops if this module runs more than once.
   resize();
-  start();
+  if (!window.__starfieldRunning) {
+    window.__starfieldRunning = true;
+    start();
+  } else {
+    // If already running, just redraw at new size.
+    draw();
+  }
 })();
 
