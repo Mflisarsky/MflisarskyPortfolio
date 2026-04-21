@@ -1,82 +1,82 @@
 ---
-title: "Hacking Case — NIST CFReDS Forensic Analysis with Autopsy"
+title: "Hacking Case: Autopsy analysis of a NIST CFReDS forensic image"
 date: 2026-02-17
-tags: ["digital-forensics", "autopsy", "nist-cfreds", "windows-artifacts", "evidence-analysis"]
+tags: ["digital forensics", "autopsy", "evidence analysis"]
 tools: ["Autopsy", "NIST CFReDS", "Windows forensic artifacts"]
-summary: "Forensic analysis of the NIST CFReDS 'Hacking Case' image using Autopsy — identifying a suspect user, malicious tools, and evidence of intent for a cohesive investigative narrative."
+summary: "Forensic analysis of the NIST CFReDS 'Hacking Case' image using Autopsy, identifying a suspect user, malicious tools, and evidence of intent for a cohesive investigative narrative."
 repoUrl: "https://cfreds.nist.gov/all/NIST/HackingCase"
 ---
 
 ## Overview
 
-This project was a **digital forensics investigation** using **Autopsy** (a free, open-source forensic platform) to analyze a **"Hacking Case"** forensic image from NIST CFReDS (<a href="https://cfreds.nist.gov/all/NIST/HackingCase" target="_blank" rel="noopener noreferrer">NIST Hacking Case</a>). CFReDS provides real-world forensic images for training; this one is a copy of a laptop that was found with a wireless card and a homemade 802.11b antenna, suggesting possible wireless hacking or wardriving. The goal was to find out **who** used the device, **what** tools were on it, **whether** those tools were actually used, and **why** — and to tie that into a clear narrative a court or employer could follow.
+This project is a digital forensics investigation using **Autopsy** (a free, open-source forensic tool). I analyzed the NIST CFReDS **\"Hacking Case\"** forensic image (<a href="https://cfreds.nist.gov/all/NIST/HackingCase" target="_blank" rel="noopener noreferrer">NIST Hacking Case</a>). The case describes a laptop found with a wireless card and a homemade 802.11b antenna, which points toward possible wireless hacking or wardriving. My goal was simple: figure out who used the device, what tools were on it, whether those tools were used, and what the web activity says about intent.
 
-![Case description — Dell notebook, wireless card, and 802.11b antenna](/images/hacking-case/case-intro.png)
+![Case description - Dell notebook, wireless card, and 802.11b antenna](/images/hacking-case/case-intro.png)
 
 ## Approach
 
-I read the case description first to form hypotheses, then worked through the evidence in order: identify the main user account, see what was on their desktop and in their folders, check what had been used recently, and finally review web history to establish intent. That way each step built on the last and supported a single story.
+I started with the case description, then worked through the evidence in a practical order. First I identified the main user account. Then I looked at the suspect’s desktop and user folders for tools. After that I checked recent activity to see what had been opened. Finally I reviewed browser history to understand intent.
 
 ## Findings
 
 ### Suspect identification
 
-I first looked at **OS Accounts** to see who had used the computer. Besides the default Windows accounts (e.g. Administrator, Guest), there was one custom user: **"mr. evil"**. That made him the only real person we could tie activity to, so he became the main suspect for anything the device was used for.
+I first checked **OS Accounts** to see who used the computer. Besides the default Windows accounts (like Administrator and Guest), there was one custom user: **\"mr. evil\"**. Since it was the only real user account, that’s the account I tied the rest of the evidence to.
 
-![Documents and Settings — mr.evil folder](/images/hacking-case/documents-settings-mr-evil.png)
+![Documents and Settings - mr.evil folder](/images/hacking-case/documents-settings-mr-evil.png)
 
-![OS Accounts listing — mr. evil and system accounts](/images/hacking-case/os-accounts-listing.png)
+![OS Accounts listing - mr. evil and system accounts](/images/hacking-case/os-accounts-listing.png)
 
 ### Evidence on the Desktop
 
-Next I looked at **mr. evil’s** files. On his **Desktop** he had a **"tools"** folder full of shortcuts (`.lnk` files — Windows links to programs). Those shortcuts pointed to:
+Next I looked at **mr. evil’s** files. On his **Desktop** he had a **\"tools\"** folder full of Windows shortcuts (`.lnk` files). Those shortcuts pointed to:
 
 ![Desktop and Tools folder structure](/images/hacking-case/desktop-tools-tree.png)
 
-![Tools folder — .lnk shortcuts (Cain, Ethereal, Network Stumbler, etc.)](/images/hacking-case/tools-folder-lnks.png)
+![Tools folder - .lnk shortcuts (Cain, Ethereal, Network Stumbler, etc.)](/images/hacking-case/tools-folder-lnks.png)
 
-- **Cain v2.5** — a password-cracking and network-sniffing tool  
-- **Ethereal (now Wireshark)** — captures and analyzes network traffic  
-- **Network Stumbler** — finds and lists nearby wireless networks (often used for *wardriving*: driving around to map or access Wi‑Fi)
+- **Cain v2.5**: password cracking and network sniffing  
+- **Ethereal (Wireshark)**: captures and analyzes network traffic  
+- **Network Stumbler**: finds nearby wireless networks (often used for wardriving)
 
-So the suspect had these tools available and had chosen to keep shortcuts to them. That showed **what was on the machine**, but not yet that he had **used** them or had **bad intentions** — so I checked recent activity and browser history next.
+This showed what tools were present, but I still needed proof they were actually being used. That’s why I checked recent activity and browser history next.
 
 ### Proof of use
 
-Windows keeps a **Recent** folder of recently opened files and shortcuts. I checked mr. evil’s Recent folder to see whether those tools had actually been launched. I found recent use of:
+Windows keeps a **Recent** folder of recently opened files and shortcuts. I checked mr. evil’s Recent folder to see what had actually been opened. I found:
 
-![Recent folder contents — Anonymizer, GhostWare, keys.lnk, etc.](/images/hacking-case/recent-folder-files.png)
+![Recent folder contents - Anonymizer, GhostWare, keys.lnk, etc.](/images/hacking-case/recent-folder-files.png)
 
-- **Anonymizer** — software used to hide your identity online  
-- **Ghostware** — used to remotely monitor or control other devices  
-- **keys.lnk** — another shortcut that suggested further suspicious activity  
+- **Anonymizer**: software used to hide identity online  
+- **Ghostware**: remote monitoring/control software  
+- **keys.lnk**: another suspicious shortcut  
 
-So we could show not only that these programs were **on** the machine, but that someone had **recently used** them — which pointed to mr. evil, the only active user.
+So it wasn’t just “tools installed.” There was evidence that the tools (and related shortcuts) were being used under the mr. evil profile.
 
 ### Evidence of intent
 
-Having tools and using them still isn’t enough to prove **intent** — they could theoretically be used for learning or authorized testing. So I reviewed **Web History** to see what the user was looking up and visiting. That gave clear evidence of intent:
+Having tools installed isn’t automatically a crime, so I checked **Web History** to understand what the user was researching and doing online. The browsing history supported the idea that the tools were being used for hacking-related activity:
 
-- **elitehackers.com** — a hacking forum/community; he visited the site and accessed files there, showing he was involved in that world.
-- **netstumbler.com/downloads** — he had downloaded Network Stumbler, which matched the shortcut we found on his desktop.
-- **wardriving.com** and **whatismyip.com** — direct interest in wardriving and checking his IP, which fit with the homemade antenna and the kind of activity the case suggested.
+- **elitehackers.com**: hacking forum/community activity  
+- **netstumbler.com/downloads**: download activity that matched the desktop shortcut  
+- **wardriving.com** and **whatismyip.com**: interest in wardriving and checking IP information  
 
-![Visit Details — elitehackers.com](/images/hacking-case/visit-elitehackers.png)
+![Visit Details - elitehackers.com](/images/hacking-case/visit-elitehackers.png)
 
-![Visit Details — netstumbler.com download](/images/hacking-case/visit-netstumbler-download.png)
+![Visit Details - netstumbler.com download](/images/hacking-case/visit-netstumbler-download.png)
 
-![Web history — wardriving.com and whatismyip.com (Mr. Evil)](/images/hacking-case/web-history-wardriving.png)
+![Web history - wardriving.com and whatismyip.com (Mr. Evil)](/images/hacking-case/web-history-wardriving.png)
 
 ## Conclusion
 
-The investigation produced evidence in three areas that together tell a clear story:
+At a high level, the evidence came together in three parts:
 
-1. **What was on the device** — Hacking and anonymity tools were present (Cain, Ethereal/Wireshark, Network Stumbler, Anonymizer, Ghostware), with shortcuts organized on the desktop.
-2. **Whether they were used** — The Recent folder showed that these and other suspicious programs had been opened recently, and mr. evil was the only non-default user, so the activity could be tied to him.
-3. **Why it mattered** — Browser history showed visits to hacking forums, wardriving sites, and a Network Stumbler download, which supported a narrative of intentional misuse (e.g. wardriving or unauthorized access) rather than accidental or innocent use.
+1. **Tools present**: shortcuts and programs consistent with hacking and anonymity.  
+2. **Signs of use**: Recent items showing the tools/shortcuts were opened.  
+3. **Intent**: browser history that lined up with wardriving and hacking-related activity.  
 
-In the end, a reader (or a court) could follow the same path: who used the laptop, what tools were there, that they were used, and that the user’s behavior indicated malicious intent — which is what this kind of forensic report is meant to show.
+The end result is a straightforward narrative: identify the user, show the tools, show they were used, and support intent with web activity.
 
 ---
 
-*Case source: <a href="https://cfreds.nist.gov/all/NIST/HackingCase" target="_blank" rel="noopener noreferrer">NIST CFReDS — Hacking Case</a>*
+*Case source: <a href="https://cfreds.nist.gov/all/NIST/HackingCase" target="_blank" rel="noopener noreferrer">NIST CFReDS - Hacking Case</a>*
