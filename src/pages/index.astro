@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { getProjectSlug } from '../lib/projectSlug';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -18,7 +19,7 @@ const projects = (await getCollection('projects'))
       <h2>Recent Projects</h2>
       <div class="project-grid">
         {projects.map((entry) => (
-          <a href={`/projects/${entry.id}`} class="card project-card">
+          <a href={`/projects/${getProjectSlug(entry)}`} class="card project-card">
             <h3>{entry.data.title}</h3>
             <p class="project-summary">{entry.data.summary}</p>
             <div class="project-meta">

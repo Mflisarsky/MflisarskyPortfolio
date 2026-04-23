@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
+import { getProjectSlug } from '../../lib/projectSlug';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
   return projects.map((entry) => ({
-    params: { slug: entry.id },
+    params: { slug: getProjectSlug(entry) },
     props: { entry },
   }));
 }

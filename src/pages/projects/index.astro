@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { getProjectSlug } from '../../lib/projectSlug';
 
 const allProjects = (await getCollection('projects'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -42,7 +43,7 @@ const allTags = [...new Set(allProjects.flatMap((p) => p.data.tags))].sort((a, b
           data-summary={entry.data.summary.toLowerCase()}
           data-tags={JSON.stringify(entry.data.tags.map((t) => t.toLowerCase()))}
         >
-          <h2><a href={`/projects/${entry.id}`}>{entry.data.title}</a></h2>
+          <h2><a href={`/projects/${getProjectSlug(entry)}`}>{entry.data.title}</a></h2>
           <p class="project-summary">{entry.data.summary}</p>
           <div class="project-meta">
             <time datetime={entry.data.date.toISOString()}>
@@ -54,7 +55,7 @@ const allTags = [...new Set(allProjects.flatMap((p) => p.data.tags))].sort((a, b
               ))}
             </div>
           </div>
-          <a href={`/projects/${entry.id}`} class="btn btn-primary">View project</a>
+          <a href={`/projects/${getProjectSlug(entry)}`} class="btn btn-primary">View project</a>
         </article>
       ))}
     </div>

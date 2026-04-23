@@ -1,6 +1,7 @@
 ---
 title: "Linux Fundamentals: Hands-on Ubuntu lab in VirtualBox"
 date: 2026-04-21
+slug: linux-ubuntu-lab
 tags: ["linux"]
 tools: ["Ubuntu 24.04 LTS", "VirtualBox", "Bash", "OpenSSH"]
 summary: "A hands-on Linux fundamentals lab in an Ubuntu VM, focused on the command line, permissions, logs, networking basics, and hashing."

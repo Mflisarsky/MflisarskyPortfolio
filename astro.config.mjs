@@ -7,4 +7,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://example.com',
   integrations: [sitemap()],
+  redirects: {
+    '/projects/linux-fundamentals': '/projects/linux-ubuntu-lab',
+  },
 });

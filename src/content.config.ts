@@ -10,6 +10,10 @@ const projects = defineCollection({
     tags: z.array(z.string()),
     tools: z.array(z.string()),
     summary: z.string(),
+    slug: z
+      .string()
+      .regex(/^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]$/)
+      .optional(),
     repoUrl: z.string().url().optional(),
     demoUrl: z.string().url().optional(),
   }),
